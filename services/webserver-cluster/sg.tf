@@ -1,7 +1,8 @@
 locals {
-  http_port = 80
-  all_ips   = ["0.0.0.0/0"]
-  protocol  = "tcp"
+  http_port   = 80
+  all_ips     = ["0.0.0.0/0"]
+  protocol    = "tcp"
+  egress_port = 0
 }
 resource "aws_security_group" "http-sg-instance" {
   name        = var.sg-name
@@ -17,8 +18,8 @@ resource "aws_security_group" "http-sg-instance" {
   }
 
   egress {
-    from_port   = 0
-    to_port     = 0
+    from_port   = local.egress_port
+    to_port     = local.egress_port
     protocol    = "-1"
     cidr_blocks = local.all_ips
   }
@@ -51,8 +52,8 @@ resource "aws_security_group" "alb-web-farm-sg" {
     cidr_blocks = local.all_ips
   }
   egress {
-    from_port   = 0
-    to_port     = 0
+    from_port   = local.egress_port
+    to_port     = local.egress_port
     protocol    = "-1"
     cidr_blocks = local.all_ips
   }
